@@ -1,0 +1,3 @@
+[server]
+# Não pergunta o e-mail na primeira execução
+showEmailPrompt = false
