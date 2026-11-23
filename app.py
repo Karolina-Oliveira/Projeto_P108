@@ -41,7 +41,7 @@ def fmt(x, casas=4):
     if isinstance(x, float) and (math.isinf(x) or math.isnan(x)):
         return str(x)
     if x != 0 and abs(x) < 10 ** (-casas):
-        return f"{x:.3e}"
+        return f"{x:.2e}".replace(".", ",")
     return f"{x:.{casas}f}".replace(".", ",")
 
 
@@ -372,7 +372,35 @@ FORMULAS = {
     ],
 }
 
+SIGLAS = r"""
+| Sigla | Nome | Significado |
+|---|---|---|
+| $\lambda$ | taxa de chegada | quantos clientes chegam por unidade de tempo |
+| $\mu$ | taxa de atendimento | quantos clientes **um** servidor atende por unidade de tempo ($1/\mu$ = tempo médio de atendimento) |
+| $s$ | número de servidores | quantos atendentes trabalham em paralelo |
+| $K$ | capacidade do sistema | número máximo de clientes no sistema (na fila + em atendimento) |
+| $N$ | tamanho da população | número total de clientes que podem chegar (população finita) |
+| $\rho$ | taxa de ocupação (utilização) | fração do tempo em que os servidores estão ocupados: $\lambda/\mu$ (1 servidor) ou $\lambda/(s\mu)$ |
+| $P_0$ | probabilidade de sistema vazio | chance de não haver nenhum cliente (taxa de ociosidade) |
+| $P_n$ | probabilidade de $n$ clientes | chance de haver exatamente $n$ clientes no sistema |
+| $P_K$ | probabilidade de sistema cheio | chance de o sistema estar lotado; o cliente que chega é bloqueado/perdido |
+| $L$ | nº médio no sistema | média de clientes no sistema (na fila + em atendimento) |
+| $L_q$ | nº médio na fila | média de clientes esperando na fila |
+| $W$ | tempo médio no sistema | tempo total médio de um cliente (espera + atendimento) |
+| $W_q$ | tempo médio na fila | tempo médio que um cliente espera até ser atendido |
+| $\bar\lambda$ | taxa efetiva de chegada | taxa dos clientes que realmente entram no sistema (modelos /K e /N) |
+| $\sigma$ | desvio-padrão do atendimento | variabilidade do tempo de atendimento no M/G/1 ($\sigma^2$ = variância) |
+| $P(n>r)$ | — | probabilidade de haver mais de $r$ clientes no sistema |
+| $P(W>t)$ | — | probabilidade de o tempo no sistema passar de $t$ |
+| $P(W_q>t)$ | — | probabilidade de a espera na fila passar de $t$ |
+| $k$ | classe de prioridade | nos modelos de prioridade, $k=1$ é a classe mais prioritária |
+
+**Lei de Little:** $L = \lambda W$ e $L_q = \lambda W_q$ (usando $\bar\lambda$ nos modelos /K e /N).
+"""
+
 with aba_form:
+    with st.expander("📌 Significado das siglas", expanded=True):
+        st.markdown(SIGLAS)
     for nome, linhas in FORMULAS.items():
         with st.expander(nome, expanded=(nome == modelo)):
             for f in linhas:
